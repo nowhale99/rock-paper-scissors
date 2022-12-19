@@ -1,3 +1,7 @@
+let playerScore = 0
+let compScore = 0
+
+
 function getComputerChoice() {
     const array = ['rock', 'paper', 'scissors']
     const computerChoice = array[Math.floor(Math.random()*array.length)]
@@ -17,37 +21,43 @@ function playRound(playerSelection, computerSelection) {
     || (playerSelection === 'paper' && computerSelection === 'rock')) {
 
         result = `You win! ${playerSelection} beats ${computerSelection}!`
+        playerScore += 1
+        document.querySelector('#player').innerText = playerScore
 
     } else {
         result = `You lose! ${computerSelection} beats ${playerSelection}!`
+        compScore += 1
+        document.querySelector('#computer').innerText = compScore
     }
 
     return result
 
 }
 
-function game() {
+const buttons = document.querySelectorAll('button');
 
-    let playerScore = 0
-    let computerScore = 0
-    for (let i = 0; i < 5; i++){
-        const result = playRound(prompt('Choose your weapon!').toLowerCase(), getComputerChoice())
-        console.log(result)
-        console.log(result.charAt(4))
-        if (result.charAt(4) === 'w') {
-            playerScore += 1
-        } else if (result.charAt(4) === 'l') {
-            computerScore += 1
-        }
-        console.log(playerScore + ' - ' + computerScore)
+buttons.forEach(button => button.addEventListener('click', ()=> {
+    const div = document.querySelector('.result')
+    div.innerText = playRound(button.id, getComputerChoice())
+
+    if (playerScore == 5) {
+        let final = document.createElement('div')
+        final.innerText = 'You have won the battle and save humanity!'
+        document.body.appendChild(final)
+        document.querySelector('#container').remove()
+        document.querySelector('.result').remove()
+    } else if (compScore == 5) {
+        let final = document.createElement('div')
+        final.innerText = 'You have lost the battle to the Machine and betray humanity!'
+        document.body.appendChild(final)
+        document.querySelector('#container').remove()
+        document.querySelector('.result').remove()
+        
     }
-    if (playerScore > computerScore) {
-        console.log('Victory is Yours!')
-    }else if (computerScore > playerScore) {
-        console.log('What a shame, you was defeated by Machine!')
-    } else {
-        console.log('Nobody survived in this war...')
-    }
-    
+}))
+
+if (playerScore == 5) {
+    document.querySelector('.result').innerText = 'You have won the battle and save humanity!'
+} else if (compScore == 5) {
+    document.querySelector('.result').innerText = 'You have lost the battle to the Machine and betray humanity!'
 }
-game()
